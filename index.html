@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>صفحة ذكر الله</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      direction: rtl;
+      padding: 50px;
+      /* خلفية تدرج لوني هادئ مع نقاط مضيئة */
+      background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+      overflow: hidden;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+      color: #003366;
+    }
+    h1 {
+      color: #002244;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 3px #a1c4fd;
+    }
+    #dhikr {
+      font-size: 2.5em;
+      margin: 20px 0;
+      color: #004080;
+      text-shadow: 1px 1px 4px #c2e9fb;
+    }
+    #counter {
+      font-size: 1.8em;
+      margin: 15px 0 40px;
+      color: #002244;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px #a1c4fd;
+    }
+    button {
+      font-size: 1.3em;
+      padding: 12px 30px;
+      background-color: #005f99;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 30px;
+      box-shadow: 0 4px 8px rgba(0, 95, 153, 0.4);
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #004470;
+      box-shadow: 0 6px 12px rgba(0, 68, 112, 0.6);
+    }
+
+    /* نقاط مضيئة متحركة في الخلفية */
+    .particle {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.2;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
+      50% { transform: translateY(-20px) translateX(10px); opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ذكر الله</h1>
+  <div id="dhikr">سبحان الله وبحمده</div>
+  <div id="counter">عدد التكرار: 0</div>
+  <button onclick="countDhikr()">ذكر</button>
+
+  <script>
+    const dhikrList = [
+      "سبحان الله وبحمده",
+      "سبحان الله العظيم",
+      "سبحان الله والحمدلله ولا إله إلا الله والله أكبر"
+    ];
+    let currentIndex = 0;
+    let count = 0;
+    const maxCount = 100;
+
+    // صوت ترديد بسيط (تكبير)
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound() {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(600, audioContext.currentTime); // تردد الصوت
+
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.1); // مدة الصوت 0.1 ثانية
+    }
+
+    function countDhikr() {
+      playSound();
+
+      count++;
+      document.getElementById('counter').textContent = "عدد التكرار: " + count;
+
+      if (count === maxCount) {
+        count = 0;
+        currentIndex = (currentIndex + 1) % dhikrList.length;
+        document.getElementById('dhikr').textContent = dhikrList[currentIndex];
+        document.getElementById('counter').textContent = "عدد التكرار: 0";
+      }
+    }
+
+    // إضافة بعض النقاط المضيئة في الخلفية
+    const body = document.body;
+    for(let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = (Math.random() * 6) + 's';
+      body.appendChild(particle);
+    }
+  </script>
+
+</body>
+</html>
